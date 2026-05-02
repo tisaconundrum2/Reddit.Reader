@@ -1,0 +1,80 @@
+name: Reddit Reader Pipeline
+
+on:
+  schedule:
+    - cron: "0 6 * * *"   # Daily at 06:00 UTC
+  workflow_dispatch:        # Manual trigger from the Actions tab
+
+permissions:
+  contents: write           # Required to commit output back to the repo
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+
+    env:
+      REDDIT_API_KEY: ${{ secrets.REDDIT_API_KEY }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+
+    steps:
+      # ── 1. Checkout ──────────────────────────────────────────────────────────
+      # seen_ids.json and feed.xml persist via git — no cache needed.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # ── 2. Build and start the Kokoro TTS sidecar ────────────────────────────
+      - name: Build Kokoro TTS image
+        run: docker build -t kokoro-tts ./Kokoro-TTS
+
+      - name: Start Kokoro TTS container
+        run: |
+          docker run -d --name kokoro -p 5000:5000 kokoro-tts
+          echo "Waiting for Kokoro TTS to be ready..."
+          timeout 120 bash -c '
+            until curl -sf -X POST http://localhost:5000/tts \
+              -H "Content-Type: application/json" \
+              -d "{\"text\":\"ready\",\"voice\":\"af_heart\",\"speed\":1.0}" \
+              -o /dev/null; do
+              sleep 5
+            done
+          '
+          echo "Kokoro TTS is ready."
+
+      # ── 3. Build the Reddit.Reader.Builder image ─────────────────────────────
+      - name: Build Reddit.Reader.Builder image
+        run: docker build -t reddit-reader-builder ./Reddit.Reader.Builder
+
+      # ── 4. Run the pipeline ───────────────────────────────────────────────────
+      # output/ is bind-mounted so MP3s, feed.xml, and seen_ids.json land in the
+      # workspace and can be committed. FeedBaseUrl makes enclosure URLs point
+      # at the raw committed files on the default branch.
+      - name: Run pipeline
+        run: |
+          mkdir -p output
+          docker run --rm \
+            --network host \
+            -e REDDIT_API_KEY="$REDDIT_API_KEY" \
+            -e GEMINI_API_KEY="$GEMINI_API_KEY" \
+            -e KokoroTts__BaseUrl=http://localhost:5000 \
+            -e Pipeline__FeedBaseUrl=https://raw.githubusercontent.com/${{ github.repository }}/main/output \
+            -e Pipeline__PostLimit=${{ vars.POST_LIMIT || '1' }} \
+            -v ${{ github.workspace }}/output:/app/output \
+            reddit-reader-builder
+
+      # ── 5. Stop the TTS sidecar ───────────────────────────────────────────────
+      - name: Stop Kokoro TTS container
+        if: always()
+        run: docker stop kokoro && docker rm kokoro || true
+
+      # ── 6. Commit output back to the repo ─────────────────────────────────────
+      - name: Commit pipeline output
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add output/
+          git diff --cached --quiet \
+            && echo "No changes to commit." \
+            || git commit -m "chore: update feed, catalog, and seen IDs [skip ci]"
+          git push

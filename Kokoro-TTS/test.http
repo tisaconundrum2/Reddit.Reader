@@ -1,0 +1,7 @@
+POST /tts HTTP/1.1
+User-Agent: vscode-restclient
+Content-Type: application/json
+Host: localhost:5000
+Content-Length: 58
+
+{"text": "Hello world", "voice": "af_heart", "speed": 1.0}
