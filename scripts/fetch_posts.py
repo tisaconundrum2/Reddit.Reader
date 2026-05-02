@@ -1,12 +1,14 @@
 """
-Fetches posts from Reddit via RapidAPI.
-Reads data.posts[].title and data.posts[].selftext.
+Fetches posts from Reddit via RapidAPI (reddit3.p.rapidapi.com).
+API call format: ?url=<encoded reddit URL>&filter=hot
+Response format: body[] array with postId, title, selfText fields.
 Deduplicates against seen_ids.json to avoid re-reading posts.
 """
 
 import json
 import os
 from pathlib import Path
+from urllib.parse import quote
 
 import requests
 from dotenv import load_dotenv
@@ -16,6 +18,7 @@ load_dotenv()
 RAPIDAPI_KEY = os.environ["REDDIT_API_KEY"]
 RAPIDAPI_HOST = "reddit3.p.rapidapi.com"
 API_URL = "https://reddit3.p.rapidapi.com/v1/reddit/posts"
+REDDIT_BASE = "https://www.reddit.com/r/"
 SEEN_IDS_FILE = Path(__file__).parent.parent / "seen_ids.json"
 
 
@@ -31,16 +34,20 @@ def _save_seen_ids(seen: set) -> None:
         json.dump(sorted(seen), f, indent=2)
 
 
-def fetch_posts(subreddit: str, limit: int = 10) -> list[dict]:
+def fetch_posts(subreddit: str, filter: str = "hot") -> list[dict]:
     """
     Returns a list of new (unseen) posts from the given subreddit.
     Each item: {"id": str, "subreddit": str, "title": str, "selftext": str}
     """
+    reddit_url = f"{REDDIT_BASE}{subreddit}/"
     headers = {
         "x-rapidapi-key": RAPIDAPI_KEY,
         "x-rapidapi-host": RAPIDAPI_HOST,
     }
-    params = {"subreddit": subreddit, "limit": str(limit)}
+    params = {
+        "url": reddit_url,
+        "filter": filter,
+    }
 
     response = requests.get(API_URL, headers=headers, params=params, timeout=30)
     print(f"[fetch] r/{subreddit} — HTTP {response.status_code}")
@@ -54,17 +61,17 @@ def fetch_posts(subreddit: str, limit: int = 10) -> list[dict]:
         print(f"[fetch] Non-JSON response for r/{subreddit}: {response.text[:200]}")
         return []
 
-    posts_raw = data.get("data", {}).get("posts", [])
+    # Response shape: { "meta": {...}, "body": [ { "id": ..., "title": ..., "selftext": ... }, ... ] }
+    posts_raw = data.get("body") or []
     seen = _load_seen_ids()
     new_posts = []
 
     for post in posts_raw:
-        post_id = post.get("id") or post.get("name", "")
-        selftext = (post.get("selftext") or "").strip()
+        post_id = (post.get("id") or "").strip()
         title = (post.get("title") or "").strip()
+        selftext = (post.get("selftext") or "").strip()
 
-        # Skip posts with no readable body or already seen
-        if post_id in seen or not title:
+        if not post_id or post_id in seen or not title:
             continue
 
         new_posts.append(
@@ -84,6 +91,7 @@ def fetch_posts(subreddit: str, limit: int = 10) -> list[dict]:
 def fetch_all_subreddits(subreddits_file: Path, limit: int = 5) -> list[dict]:
     """
     Reads subreddits from a file (one per line) and fetches new posts from each.
+    limit is ignored (the API returns a fixed page); kept for interface compatibility.
     """
     subreddits = [
         line.strip()
@@ -95,7 +103,7 @@ def fetch_all_subreddits(subreddits_file: Path, limit: int = 5) -> list[dict]:
     for subreddit in subreddits:
         print(f"[fetch] Fetching r/{subreddit}...")
         try:
-            posts = fetch_posts(subreddit, limit=limit)
+            posts = fetch_posts(subreddit)
             print(f"[fetch]   {len(posts)} new post(s)")
             all_posts.extend(posts)
         except requests.HTTPError as e:
