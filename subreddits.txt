@@ -1,5 +1,4 @@
-AskReddit
-todayilearned
-worldnews
-technology
-science
+MaliciousCompliance
+pettyrevenge
+talesfromtechsupport
+talesfromit
