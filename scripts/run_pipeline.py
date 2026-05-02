@@ -1,6 +1,7 @@
 """
-Orchestrator: fetch → clean → tts → upload → rss
-Run this script directly or via GitHub Actions.
+Orchestrator: fetch → (per post: clean → tts → upload → rss) 
+Processes and persists each post incrementally so a failure
+only loses unprocessed posts, not already-completed ones.
 """
 
 import sys
@@ -13,11 +14,11 @@ load_dotenv()
 # Ensure scripts/ is on the path when run from repo root
 sys.path.insert(0, str(Path(__file__).parent))
 
-from build_rss import add_episodes
+from build_rss import add_episode  # changed: singular, per-post
 from clean_text import clean_post
 from fetch_posts import fetch_all_subreddits
 from tts import text_to_mp3
-from upload_release import upload_mp3s
+from upload_release import ReleaseUploader  # changed: stateful uploader
 
 SUBREDDITS_FILE = Path(__file__).parent.parent / "subreddits.txt"
 OUTPUT_DIR = Path(__file__).parent.parent / "output"
@@ -33,41 +34,64 @@ def run() -> None:
         return
     print(f"Total new posts: {len(posts)}")
 
-    # 2. Clean text with Gemini
-    print("\n=== Step 2: Clean text with Gemini ===")
-    for post in posts:
-        print(f"[clean] {post['id']} — {post['title'][:60]}")
-        post["cleaned_text"] = clean_post(post["title"], post["selftext"])
+    # Create a single release upfront so all MP3s go into one release
+    print("\n=== Creating GitHub Release ===")
+    uploader = ReleaseUploader()
+    uploader.create()
 
-    # 3. Generate MP3s with Kokoro TTS
-    print("\n=== Step 3: Generate MP3s ===")
-    mp3_paths: list[Path] = []
-    failed_ids: set[str] = set()
-    for post in posts:
+    succeeded = 0
+    failed = 0
+
+    for i, post in enumerate(posts, 1):
+        post_id = post["id"]
+        print(f"\n--- Post {i}/{len(posts)}: {post_id} ---")
+        print(f"    {post['title'][:70]}")
+
+        # 2. Clean
         try:
-            path = text_to_mp3(post["id"], post["cleaned_text"])
-            mp3_paths.append(path)
+            print("  [clean] Cleaning text...")
+            post["cleaned_text"] = clean_post(post["title"], post["selftext"])
         except Exception as e:
-            print(f"[tts] FAILED {post['id']}: {e}")
-            failed_ids.add(post["id"])
+            print(f"  [clean] FAILED: {e}")
+            failed += 1
+            continue
 
-    if not mp3_paths:
-        print("All TTS conversions failed. Exiting.")
-        sys.exit(1)
+        # 3. TTS
+        try:
+            print("  [tts] Generating MP3...")
+            mp3_path = text_to_mp3(post_id, post["cleaned_text"])
+        except Exception as e:
+            print(f"  [tts] FAILED: {e}")
+            failed += 1
+            continue
 
-    # 4. Upload MP3s to a GitHub Release
-    print("\n=== Step 4: Upload to GitHub Release ===")
-    mp3_urls = upload_mp3s(mp3_paths)
+        # 4. Upload
+        try:
+            print("  [upload] Uploading to GitHub Release...")
+            download_url = uploader.upload(mp3_path)
+            print(f"  [upload] -> {download_url}")
+        except Exception as e:
+            print(f"  [upload] FAILED: {e}")
+            failed += 1
+            continue
 
-    # 5. Update RSS feed
-    print("\n=== Step 5: Update RSS feed ===")
-    successful_posts = [p for p in posts if p["id"] not in failed_ids]
-    add_episodes(successful_posts, mp3_urls)
+        # 5. Immediately update RSS — persisted after each post
+        try:
+            print("  [rss] Updating feed...")
+            add_episode(post, download_url)
+        except Exception as e:
+            print(f"  [rss] FAILED: {e}")
+            # Not counting as failed since audio is already uploaded
+            # and the URL is logged above for manual recovery if needed
+
+        succeeded += 1
 
     print("\n=== Done ===")
-    print(f"  Posts processed : {len(successful_posts)}")
-    print(f"  MP3s uploaded   : {len(mp3_urls)}")
-    print(f"  Posts failed    : {len(failed_ids)}")
+    print(f"  Succeeded : {succeeded}")
+    print(f"  Failed    : {failed}")
+
+    if succeeded == 0:
+        sys.exit(1)
 
 
 if __name__ == "__main__":

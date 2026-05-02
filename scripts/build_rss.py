@@ -118,3 +118,32 @@ def add_episodes(posts: list[dict], mp3_urls: dict[str, str]) -> None:
     fg = _make_generator(all_entries)
     fg.rss_file(str(FEED_FILE), pretty=True)
     print(f"[rss] Updated {FEED_FILE} with {len(new_entries)} new episode(s).")
+
+
+def add_episode(post: dict, download_url: str) -> None:
+    """
+    Adds a single episode to feed.xml immediately after its MP3 is uploaded.
+    Safe to call repeatedly; skips if the post ID is already in the feed.
+    """
+    existing = _load_existing_entries()
+    existing_ids = {e["id"] for e in existing}
+
+    post_id = post["id"]
+    if post_id in existing_ids:
+        print(f"[rss] {post_id} already in feed, skipping.")
+        return
+
+    pub = datetime.now(timezone.utc).isoformat()
+    entry = {
+        "id": post_id,
+        "title": f"[r/{post['subreddit']}] {post['title']}",
+        "description": post.get("selftext", "")[:500],
+        "published": pub,
+        "url": download_url,
+        "length": "0",
+    }
+
+    all_entries = existing + [entry]
+    fg = _make_generator(all_entries)
+    fg.rss_file(str(FEED_FILE), pretty=True)
+    print(f"[rss] Added episode {post_id} to feed.")

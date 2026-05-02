@@ -60,25 +60,41 @@ def upload_asset(upload_url: str, mp3_path: Path) -> str:
     return resp.json()["browser_download_url"]
 
 
+class ReleaseUploader:
+    """
+    Manages a single GitHub Release for the current pipeline run.
+    Call create() once, then upload() for each MP3 as it's ready.
+    """
+
+    def __init__(self) -> None:
+        self._upload_url: str | None = None
+        self._release_tag: str | None = None
+
+    def create(self) -> None:
+        now = datetime.now(timezone.utc)
+        tag = f"run-{now.strftime('%Y%m%d-%H%M%S')}"
+        name = f"Reddit Reader — {now.strftime('%Y-%m-%d %H:%M UTC')}"
+
+        print(f"[release] Creating release '{name}' (tag: {tag})")
+        release = create_release(tag, name)
+        self._upload_url = release["upload_url"]
+        self._release_tag = tag
+        print(f"[release] Release created: {release['html_url']}")
+
+    def upload(self, mp3_path: Path) -> str:
+        """
+        Uploads a single MP3 to the release.
+        Returns the browser_download_url.
+        """
+        if not self._upload_url:
+            raise RuntimeError("Must call create() before upload()")
+        return upload_asset(self._upload_url, mp3_path)
+
+
+# ---------------------------------------------------------------------------
+# Kept for backwards-compat if anything still imports upload_mp3s directly
+# ---------------------------------------------------------------------------
 def upload_mp3s(mp3_paths: list[Path]) -> dict[str, str]:
-    """
-    Creates a dated GitHub Release and uploads all MP3s.
-    Returns {post_id: download_url} mapping.
-    """
-    now = datetime.now(timezone.utc)
-    tag = f"run-{now.strftime('%Y%m%d-%H%M%S')}"
-    name = f"Reddit Reader — {now.strftime('%Y-%m-%d %H:%M UTC')}"
-
-    print(f"[release] Creating release '{name}' (tag: {tag})")
-    release = create_release(tag, name)
-    upload_url = release["upload_url"]
-
-    urls: dict[str, str] = {}
-    for mp3 in mp3_paths:
-        post_id = mp3.stem
-        print(f"[release] Uploading {mp3.name}...")
-        download_url = upload_asset(upload_url, mp3)
-        urls[post_id] = download_url
-        print(f"[release]   -> {download_url}")
-
-    return urls
+    uploader = ReleaseUploader()
+    uploader.create()
+    return {mp3.stem: uploader.upload(mp3) for mp3 in mp3_paths}

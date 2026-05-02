@@ -1,0 +1,75 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Test: All",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/scripts/test_local.py",
+      "args": ["--all"],
+      "cwd": "${workspaceFolder}",
+      "envFile": "${workspaceFolder}/.env",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Test: Fetch Posts",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/scripts/test_local.py",
+      "args": ["--fetch", "--subreddit", "MaliciousCompliance"],
+      "cwd": "${workspaceFolder}",
+      "envFile": "${workspaceFolder}/.env",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Test: Clean Text (Gemini)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/scripts/test_local.py",
+      "args": ["--clean"],
+      "cwd": "${workspaceFolder}",
+      "envFile": "${workspaceFolder}/.env",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Test: TTS (Kokoro)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/scripts/test_local.py",
+      "args": ["--tts", "--post-id", "test_post", "--voice", "af_heart"],
+      "cwd": "${workspaceFolder}",
+      "envFile": "${workspaceFolder}/.env",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Test: Build RSS",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/scripts/test_local.py",
+      "args": ["--rss"],
+      "cwd": "${workspaceFolder}",
+      "envFile": "${workspaceFolder}/.env",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Test: Upload Release (GitHub)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/scripts/test_local.py",
+      "args": ["--upload"],
+      "cwd": "${workspaceFolder}",
+      "envFile": "${workspaceFolder}/.env",
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "Test: Full Pipeline",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/scripts/test_local.py",
+      "args": ["--pipeline"],
+      "cwd": "${workspaceFolder}",
+      "envFile": "${workspaceFolder}/.env",
+      "console": "integratedTerminal"
+    }
+  ]
+}
