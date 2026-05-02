@@ -12,7 +12,7 @@ load_dotenv()
 
 _client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
-_MODEL = "gemini-1.5-flash"
+_MODEL = "gemini-2.0-flash"
 _SYSTEM_PROMPT = (
     "You are preparing text for a text-to-speech podcast narrator. "
     "Fix grammar, punctuation, and spelling. Remove markdown formatting, "
