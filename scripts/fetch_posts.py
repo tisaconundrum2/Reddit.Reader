@@ -43,8 +43,16 @@ def fetch_posts(subreddit: str, limit: int = 10) -> list[dict]:
     params = {"subreddit": subreddit, "limit": str(limit)}
 
     response = requests.get(API_URL, headers=headers, params=params, timeout=30)
+    print(f"[fetch] r/{subreddit} — HTTP {response.status_code}")
+    if not response.text.strip():
+        print(f"[fetch] Empty response body for r/{subreddit}, skipping.")
+        return []
     response.raise_for_status()
-    data = response.json()
+    try:
+        data = response.json()
+    except Exception:
+        print(f"[fetch] Non-JSON response for r/{subreddit}: {response.text[:200]}")
+        return []
 
     posts_raw = data.get("data", {}).get("posts", [])
     seen = _load_seen_ids()

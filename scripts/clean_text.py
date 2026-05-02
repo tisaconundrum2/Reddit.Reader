@@ -5,12 +5,12 @@ making it suitable for text-to-speech narration.
 
 import os
 
-import google.generativeai as genai
+from google import genai
 from dotenv import load_dotenv
 
 load_dotenv()
 
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+_client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
 _MODEL = "gemini-1.5-flash"
 _SYSTEM_PROMPT = (
@@ -28,12 +28,12 @@ def clean_post(title: str, selftext: str) -> str:
     Returns a single cleaned string ready for TTS.
     """
     raw = f"Title: {title}\n\n{selftext}" if selftext else f"Title: {title}"
+    full_prompt = f"{_SYSTEM_PROMPT}\n\n{raw}"
 
-    model = genai.GenerativeModel(
-        model_name=_MODEL,
-        system_instruction=_SYSTEM_PROMPT,
+    response = _client.models.generate_content(
+        model=_MODEL,
+        contents=full_prompt,
     )
-    response = model.generate_content(raw)
     return response.text.strip()
 
 
