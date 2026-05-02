@@ -10,17 +10,24 @@ public sealed class Worker(
     IRssFeedService rssFeedService,
     ICatalogService catalogService,
     IConfiguration config,
+    IHostApplicationLifetime lifetime,
     ILogger<Worker> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        var intervalHours = int.TryParse(config["Pipeline:RunIntervalHours"], out var h) ? h : 24;
         var postLimit = int.TryParse(config["Pipeline:PostLimit"], out var l) ? l : 1;
         var subreddits = config.GetSection("Reddit:Subreddits").Get<string[]>()
             ?? ["MaliciousCompliance"];
         var filter = config["Reddit:Filter"] ?? "hot";
 
-        await RunPipelineAsync(subreddits, filter, postLimit, stoppingToken);
+        try
+        {
+            await RunPipelineAsync(subreddits, filter, postLimit, stoppingToken);
+        }
+        finally
+        {
+            lifetime.StopApplication();
+        }
     }
 
     private async Task RunPipelineAsync(string[] subreddits, string filter, int postLimit, CancellationToken ct)
