@@ -38,7 +38,12 @@ jobs:
             cp output/feed.xml deploy/feed.xml
           fi
 
-          # MP3 files (LFS-tracked on main; actual bytes pulled by checkout lfs:true)
+          # Catalog JSON (consumed by the site's index.html)
+          if [ -f output/catalog.json ]; then
+            cp output/catalog.json deploy/catalog.json
+          fi
+
+          # MP3 files (LFS-tracked; actual bytes pulled by checkout lfs:true)
           if ls output/*.mp3 2>/dev/null; then
             cp output/*.mp3 deploy/
           fi
