@@ -108,10 +108,12 @@ public sealed class Worker(
             }
 
             // Step 3: TTS → save MP3 locally
+            // Prepend the title with a pause before the cleaned body
+            var ttsText = $"{post.Title}.\n\n{cleanedText}";
             FileInfo mp3File;
             try
             {
-                mp3File = await ttsService.GenerateMp3Async(post.PostId, cleanedText, null, ct);
+                mp3File = await ttsService.GenerateMp3Async(post.PostId, ttsText, null, ct);
             }
             catch (Exception ex)
             {
