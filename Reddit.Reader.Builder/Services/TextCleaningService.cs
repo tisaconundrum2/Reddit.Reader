@@ -10,10 +10,11 @@ public sealed class TextCleaningService(
     ILogger<TextCleaningService> logger) : ITextCleaningService
 {
     private const string SystemPrompt =
-        "You are preparing text for a text-to-speech podcast narrator. " +
+        "You are preparing story body text for a text-to-speech podcast narrator. " +
         "Fix grammar, punctuation, and spelling. Remove markdown formatting, " +
         "URLs, and anything that would sound awkward when read aloud. " +
-        "Expand abbreviations where sensible. Return only the cleaned text, " +
+        "Expand abbreviations where sensible. " +
+        "Return ONLY the cleaned story body text. Do NOT include the title, " +
         "no explanations, no introductions, no meta-commentary.";
 
     public async Task<string> CleanAsync(string title, string selftext, CancellationToken ct = default)
@@ -23,8 +24,8 @@ public sealed class TextCleaningService(
         var model = config["Gemini:Model"] ?? "gemini-2.0-flash";
 
         var raw = string.IsNullOrWhiteSpace(selftext)
-            ? $"Title: {title}"
-            : $"Title: {title}\n\n{selftext}";
+            ? title
+            : selftext;
 
         var fullPrompt = $"{SystemPrompt}\n\n{raw}";
 
