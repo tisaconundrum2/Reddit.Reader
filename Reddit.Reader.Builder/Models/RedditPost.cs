@@ -33,23 +33,29 @@ public sealed class RedditPost
     public string Subreddit { get; set; } = string.Empty;
 }
 
-public sealed class RedditMeta
+public sealed class RedditChild
 {
-    [JsonPropertyName("version")]
-    public string Version { get; set; } = string.Empty;
+    [JsonPropertyName("kind")]
+    public string Kind { get; set; } = string.Empty;
 
-    [JsonPropertyName("status")]
-    public int Status { get; set; }
-
-    [JsonPropertyName("total")]
-    public int Total { get; set; }
+    [JsonPropertyName("data")]
+    public RedditPost? Data { get; set; }
 }
 
-public sealed class RedditResponse
+public sealed class RedditListingData
 {
-    [JsonPropertyName("meta")]
-    public RedditMeta? Meta { get; set; }
+    [JsonPropertyName("children")]
+    public List<RedditChild> Children { get; set; } = [];
 
-    [JsonPropertyName("body")]
-    public List<RedditPost> Body { get; set; } = [];
+    [JsonPropertyName("after")]
+    public string? After { get; set; }
+}
+
+public sealed class RedditListing
+{
+    [JsonPropertyName("kind")]
+    public string Kind { get; set; } = string.Empty;
+
+    [JsonPropertyName("data")]
+    public RedditListingData? Data { get; set; }
 }

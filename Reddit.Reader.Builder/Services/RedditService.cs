@@ -8,23 +8,19 @@ public sealed class RedditService(
     IConfiguration config,
     ILogger<RedditService> logger) : IRedditService
 {
-    private const string RapidApiHost = "reddit3.p.rapidapi.com";
-    private const string ApiUrl = "https://reddit3.p.rapidapi.com/v1/reddit/posts";
     private const string RedditBase = "https://www.reddit.com/r/";
 
     public async Task<List<RedditPost>> FetchNewPostsAsync(string subreddit, string filter = "hot", CancellationToken ct = default)
     {
-        var apiKey = config["REDDIT_API_KEY"]
-            ?? throw new InvalidOperationException("REDDIT_API_KEY is not configured.");
+        var userAgent = config["Reddit:UserAgent"]
+            ?? throw new InvalidOperationException("Reddit:UserAgent is not configured.");
         var seenIdsPath = config["Pipeline:SeenIdsFile"] ?? "seen_ids.json";
 
-        var encodedUrl = Uri.EscapeDataString($"{RedditBase}{subreddit}/");
-        var requestUrl = $"{ApiUrl}?url={encodedUrl}&filter={filter}";
+        var requestUrl = $"{RedditBase}{subreddit}/{filter}.json?raw_json=1&limit=25";
 
         using var client = httpClientFactory.CreateClient();
         var request = new HttpRequestMessage(HttpMethod.Get, requestUrl);
-        request.Headers.Add("x-rapidapi-key", apiKey);
-        request.Headers.Add("x-rapidapi-host", RapidApiHost);
+        request.Headers.Add("User-Agent", userAgent);
 
         logger.LogInformation("[fetch] r/{Subreddit} — requesting posts (filter: {Filter})", subreddit, filter);
         var response = await client.SendAsync(request, ct);
@@ -43,10 +39,10 @@ public sealed class RedditService(
             return [];
         }
 
-        RedditResponse? data;
+        RedditListing? listing;
         try
         {
-            data = JsonSerializer.Deserialize<RedditResponse>(body);
+            listing = JsonSerializer.Deserialize<RedditListing>(body);
         }
         catch (JsonException ex)
         {
@@ -54,12 +50,15 @@ public sealed class RedditService(
             return [];
         }
 
-        var posts = data?.Body ?? [];
+        var children = listing?.Data?.Children ?? [];
         var seen = LoadSeenIds(seenIdsPath);
         var newPosts = new List<RedditPost>();
 
-        foreach (var post in posts)
+        foreach (var child in children)
         {
+            var post = child.Data;
+            if (post is null) continue;
+
             var postId = post.PostId.Trim();
             if (string.IsNullOrEmpty(postId) || seen.Contains(postId) || string.IsNullOrWhiteSpace(post.Title))
                 continue;
