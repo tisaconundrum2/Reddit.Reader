@@ -19,11 +19,16 @@ public sealed class CatalogService(
         var catalogFile = GetCatalogPath();
         var entries = await LoadAsync(catalogFile, ct);
 
-        if (entries.Any(e => e.PostId == post.PostId))
+        var existing = entries.FirstOrDefault(e => e.PostId == post.PostId);
+        if (existing is { Pending: false })
         {
             logger.LogInformation("[catalog] {PostId} already catalogued, skipping.", post.PostId);
             return;
         }
+
+        // Remove the pending stub (if any) so we can replace it with the completed entry.
+        if (existing != null)
+            entries.Remove(existing);
 
         entries.Add(new CatalogEntry
         {
@@ -36,11 +41,60 @@ public sealed class CatalogService(
             NumComments = post.NumComments,
             Mp3FileName = mp3File.Name,
             Mp3Url      = mp3Url,
-            ProcessedAt = DateTimeOffset.UtcNow
+            ProcessedAt = DateTimeOffset.UtcNow,
+            Pending     = false
         });
 
         await SaveAsync(catalogFile, entries, ct);
         logger.LogInformation("[catalog] Recorded {PostId} → {FileName}", post.PostId, mp3File.Name);
+    }
+
+    public async Task SeedEntryAsync(RedditPost post, CancellationToken ct = default)
+    {
+        var catalogFile = GetCatalogPath();
+        var entries = await LoadAsync(catalogFile, ct);
+
+        if (entries.Any(e => e.PostId == post.PostId))
+        {
+            logger.LogInformation("[catalog] {PostId} already in catalog, skipping seed.", post.PostId);
+            return;
+        }
+
+        entries.Add(new CatalogEntry
+        {
+            PostId      = post.PostId,
+            Subreddit   = post.Subreddit,
+            Title       = post.Title,
+            Author      = post.Author,
+            Permalink   = post.Permalink,
+            Score       = post.Score,
+            NumComments = post.NumComments,
+            Selftext    = post.Selftext,
+            ProcessedAt = DateTimeOffset.UtcNow,
+            Pending     = true
+        });
+
+        await SaveAsync(catalogFile, entries, ct);
+        logger.LogInformation("[catalog] Seeded {PostId} (pending)", post.PostId);
+    }
+
+    public async Task<List<RedditPost>> GetPendingPostsAsync(CancellationToken ct = default)
+    {
+        var entries = await LoadAsync(GetCatalogPath(), ct);
+        return entries
+            .Where(e => e.Pending)
+            .Select(e => new RedditPost
+            {
+                PostId      = e.PostId,
+                Subreddit   = e.Subreddit,
+                Title       = e.Title,
+                Author      = e.Author,
+                Permalink   = e.Permalink,
+                Score       = e.Score,
+                NumComments = e.NumComments,
+                Selftext    = e.Selftext ?? string.Empty
+            })
+            .ToList();
     }
 
     public async Task<bool> ExistsAsync(string postId, CancellationToken ct = default)
