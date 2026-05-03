@@ -64,12 +64,18 @@ public sealed class RedditService(
                 continue;
 
             newPosts.Add(post);
-            seen.Add(postId);
         }
 
-        SaveSeenIds(seenIdsPath, seen);
         logger.LogInformation("[fetch] r/{Subreddit} — {Count} new post(s)", subreddit, newPosts.Count);
         return newPosts;
+    }
+
+    public void MarkSeen(string postId)
+    {
+        var seenIdsPath = config["Pipeline:SeenIdsFile"] ?? "seen_ids.json";
+        var seen = LoadSeenIds(seenIdsPath);
+        seen.Add(postId.Trim());
+        SaveSeenIds(seenIdsPath, seen);
     }
 
     private static HashSet<string> LoadSeenIds(string path)

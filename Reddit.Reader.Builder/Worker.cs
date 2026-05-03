@@ -144,6 +144,7 @@ public sealed class Worker(
                 logger.LogError(ex, "  [catalog] FAILED for {PostId}", post.PostId);
             }
 
+            redditService.MarkSeen(post.PostId);
             succeeded++;
         }
 
