@@ -1,0 +1,2 @@
+# Git LFS — store generated MP3s outside the regular git history
+output/*.mp3 filter=lfs diff=lfs merge=lfs -text

@@ -18,11 +18,12 @@ jobs:
 
     steps:
       # ── 1. Checkout ──────────────────────────────────────────────────────────
-      # seen_ids.json and feed.xml persist via git — no cache needed.
+      # LFS is enabled so existing MP3s are pulled as real bytes, not pointers.
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
+          lfs: true
 
       # ── 2. Set up Docker Buildx (required for GHA layer cache) ───────────────
       - name: Set up Docker Buildx
@@ -76,7 +77,7 @@ jobs:
             -e REDDIT_API_KEY="$REDDIT_API_KEY" \
             -e GEMINI_API_KEY="$GEMINI_API_KEY" \
             -e KokoroTts__BaseUrl=http://localhost:5000 \
-            -e Pipeline__FeedBaseUrl=https://raw.githubusercontent.com/${{ github.repository }}/main/output \
+            -e Pipeline__FeedBaseUrl=https://tisaconundrum2.github.io/Reddit.Reader \
             -e Pipeline__PostLimit=${{ vars.POST_LIMIT || '1' }} \
             -v ${{ github.workspace }}/output:/app/output \
             reddit-reader-builder

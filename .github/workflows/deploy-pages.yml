@@ -1,0 +1,53 @@
+name: Deploy GitHub Pages
+
+on:
+  # Run automatically after a successful pipeline run
+  workflow_run:
+    workflows: ["Reddit Reader Pipeline"]
+    types: [completed]
+  # Allow manual re-deploy from the Actions tab
+  workflow_dispatch:
+
+permissions:
+  contents: write   # needed to push to gh-pages branch
+
+jobs:
+  deploy:
+    # Only deploy when the pipeline succeeded (or on manual dispatch)
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── 1. Checkout main (with LFS so actual MP3 bytes are present) ───────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          ref: main
+
+      # ── 2. Assemble the deploy directory ─────────────────────────────────
+      - name: Assemble deploy directory
+        run: |
+          mkdir -p deploy
+
+          # Landing page
+          cp site/index.html deploy/index.html
+
+          # RSS feed (written by the pipeline into output/)
+          if [ -f output/feed.xml ]; then
+            cp output/feed.xml deploy/feed.xml
+          fi
+
+          # MP3 files (LFS-tracked on main; actual bytes pulled by checkout lfs:true)
+          if ls output/*.mp3 2>/dev/null; then
+            cp output/*.mp3 deploy/
+          fi
+
+      # ── 3. Push to gh-pages branch ────────────────────────────────────────
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./deploy
+          publish_branch: gh-pages
+          commit_message: "deploy: update GitHub Pages [skip ci]"

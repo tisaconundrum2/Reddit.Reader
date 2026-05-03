@@ -230,6 +230,8 @@ venv.bak/
 
 # mkdocs documentation
 /site
+# un-ignore our GitHub Pages source directory
+!/site/
 
 # mypy
 .mypy_cache/

@@ -10,7 +10,7 @@ public sealed class RssFeedService(
     private const string FeedTitle = "Reddit Reader — Automated Podcast";
     private const string FeedDescription = "Daily Reddit posts read aloud by Kokoro TTS, cleaned by Gemini.";
     private const string FeedLanguage = "en";
-    private const string FeedLink = "https://github.com";
+    private const string FeedLink = "https://tisaconundrum2.github.io/Reddit.Reader";
 
     public Task AddEpisodeAsync(RedditPost post, FileInfo mp3File, CancellationToken ct = default)
     {
