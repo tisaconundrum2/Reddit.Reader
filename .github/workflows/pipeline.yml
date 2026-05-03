@@ -67,6 +67,10 @@ jobs:
         working-directory: Reddit.Reader.Builder
         env:
           DOTNET_ENVIRONMENT: Production
+          Reddit__UserAgent: "RedditReader/1.0 by u/tisaconundrum2"
+          Reddit__Subreddits__0: MaliciousCompliance
+          Reddit__Subreddits__1: ProRevenge
+          Reddit__Filter: hot
           Pipeline__OutputDir: ${{ github.workspace }}/output
           Pipeline__SeenIdsFile: ${{ github.workspace }}/output/seen_ids.json
           Pipeline__FeedFile: ${{ github.workspace }}/output/feed.xml
