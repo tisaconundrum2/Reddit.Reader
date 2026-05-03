@@ -22,7 +22,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          lfs: true
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       # ── 2. Assemble the deploy directory ─────────────────────────────────

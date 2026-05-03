@@ -39,6 +39,8 @@ ScaffoldingReadMe.txt
 # dotenv environment variables file
 .env
 *.mp3
+# un-ignore MP3s committed to the output directory (tracked via Git LFS)
+!output/*.mp3
 
 # Others
 ~$*
