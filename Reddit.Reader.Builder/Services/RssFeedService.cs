@@ -14,7 +14,7 @@ public sealed class RssFeedService(
 
     public Task AddEpisodeAsync(RedditPost post, FileInfo mp3File, CancellationToken ct = default)
     {
-        var feedFile = config["Pipeline:FeedFile"] ?? "feed.xml";
+        var feedFile = config["Pipeline:FeedFile"] ?? "feed-0001.xml";
         var feedBaseUrl = config["Pipeline:FeedBaseUrl"] ?? string.Empty;
         var downloadUrl = string.IsNullOrWhiteSpace(feedBaseUrl)
             ? mp3File.Name

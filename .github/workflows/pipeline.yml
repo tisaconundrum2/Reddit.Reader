@@ -72,7 +72,7 @@ jobs:
           Reddit__Filter: hot
           Pipeline__OutputDir: ${{ github.workspace }}/output
           Pipeline__SeenIdsFile: ${{ github.workspace }}/output/seen_ids.json
-          Pipeline__FeedFile: ${{ github.workspace }}/output/feed.xml
+          Pipeline__FeedFile: ${{ github.workspace }}/output/feed-0001.xml
           Pipeline__FeedBaseUrl: https://tisaconundrum2.github.io/Reddit.Reader
           Pipeline__PostLimit: ${{ vars.POST_LIMIT || '1' }}
           KokoroTts__BaseUrl: http://localhost:5000

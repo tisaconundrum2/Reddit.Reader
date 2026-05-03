@@ -34,8 +34,8 @@ jobs:
           cp site/index.html deploy/index.html
 
           # RSS feed (written by the pipeline into output/)
-          if [ -f output/feed.xml ]; then
-            cp output/feed.xml deploy/feed.xml
+          if [ -f output/feed-0001.xml ]; then
+            cp output/feed-0001.xml deploy/feed-0001.xml
           fi
 
           # Catalog JSON (consumed by the site's index.html)

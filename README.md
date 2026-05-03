@@ -15,7 +15,7 @@ An automated podcast-style Reddit reader built with **.NET 10**. On a configurab
 2. **Deduplicate** — Checks `seen_ids.json` / catalog so already-processed posts are skipped
 3. **Clean** — Sends each post through Gemini to fix grammar and make it narration-ready
 4. **TTS** — POSTs cleaned text to the Kokoro TTS sidecar and saves the returned MP3 locally
-5. **RSS** — Appends a new `<item>` (with `<enclosure>`) to `feed.xml`
+5. **RSS** — Appends a new `<item>` (with `<enclosure>`) to `feed-0001.xml`
 6. **Catalog** — Records the post in `seen_ids.json` to prevent future duplicates
 
 ---
@@ -55,7 +55,7 @@ All settings live in `appsettings.json` / `appsettings.Development.json`. Secret
 | `KokoroTts:Voice` | Voice ID | `af_heart` |
 | `KokoroTts:Speed` | Playback speed (0.5 – 2.0) | `1.0` |
 | `Pipeline:OutputDir` | Directory for generated MP3s | `output` |
-| `Pipeline:FeedFile` | RSS feed file path | `feed.xml` |
+| `Pipeline:FeedFile` | RSS feed file path | `feed-0001.xml` |
 | `Pipeline:FeedBaseUrl` | Public base URL for enclosure links | _(local path used if empty)_ |
 | `Pipeline:RunIntervalHours` | Hours between pipeline runs | `24` |
 | `Pipeline:PostLimit` | Max posts to process per run | `1` |
@@ -99,7 +99,7 @@ cd Reddit.Reader.Builder
 dotnet run
 ```
 
-Output MP3s are written to `output/`. `feed.xml` and `seen_ids.json` are updated in the project directory.
+Output MP3s are written to `output/`. `feed-0001.xml` and `seen_ids.json` are updated in the project directory.
 
 ---
 
@@ -115,6 +115,6 @@ docker compose up --build
 
 ## Output
 
-- `feed.xml` — RSS feed updated after each run. Subscribe in any podcast app that supports RSS.
+- `feed-0001.xml` — RSS feed updated after each run. Subscribe in any podcast app that supports RSS.
 - `seen_ids.json` — Tracks processed post IDs to prevent duplicates across runs.
 - `output/` — Generated MP3 files (one per post).

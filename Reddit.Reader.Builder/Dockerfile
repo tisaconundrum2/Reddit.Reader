@@ -23,7 +23,7 @@ COPY --from=build /app/publish .
 ENV DOTNET_ENVIRONMENT=Production \
     Pipeline__OutputDir=/app/output \
     Pipeline__SeenIdsFile=/app/output/seen_ids.json \
-    Pipeline__FeedFile=/app/output/feed.xml
+    Pipeline__FeedFile=/app/output/feed-0001.xml
 
 VOLUME ["/app/output"]
 

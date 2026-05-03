@@ -204,7 +204,7 @@
       narrated by Kokoro TTS, and published automatically every 24 hours.
     </p>
     <div class="header-actions">
-      <a href="feed.xml" class="btn btn-primary">
+      <a href="feed-0001.xml" class="btn btn-primary">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M6.18 15.64a2.18 2.18 0 0 1 2.18 2.18C8.36 19.01 7.38 20 6.18 20C4.98 20 4 19.01 4 17.82a2.18 2.18 0 0 1 2.18-2.18M4 4.44A15.56 15.56 0 0 1 19.56 20h-2.83A12.73 12.73 0 0 0 4 7.27V4.44m0 5.66a9.9 9.9 0 0 1 9.9 9.9h-2.83A7.07 7.07 0 0 0 4 12.93V10.1z"/>
         </svg>
@@ -238,7 +238,7 @@
     <span class="sep">·</span>
     Built with .NET 10, Kokoro TTS &amp; Gemini AI
     <span class="sep">·</span>
-    <a href="feed.xml">RSS Feed</a>
+    <a href="feed-0001.xml">RSS Feed</a>
   </footer>
 
   <script>
@@ -254,7 +254,7 @@
       }
 
       try {
-        const res = await fetch('feed.xml');
+        const res = await fetch('feed-0001.xml');
         if (!res.ok) throw new Error('feed not found');
 
         const text = await res.text();
