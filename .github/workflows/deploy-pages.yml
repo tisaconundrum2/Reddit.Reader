@@ -18,12 +18,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ── 1. Checkout main (with LFS so actual MP3 bytes are present) ───────
+      # ── 1. Checkout the branch that triggered the pipeline (with LFS) ────
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           lfs: true
-          ref: main
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       # ── 2. Assemble the deploy directory ─────────────────────────────────
       - name: Assemble deploy directory
