@@ -75,6 +75,7 @@ public sealed class Worker(
     private async Task RunPipelineAsync(string[] subreddits, string filter, int postLimit, CancellationToken ct)
     {
         logger.LogInformation("=== Step 1: Resolve posts (limit: {Limit}) ===", postLimit);
+        var allowRedditApiFallback = config.GetValue("Pipeline:AllowRedditApiFallback", false);
 
         // Prefer pending catalog entries so GHA never needs to call the Reddit API.
         var allPosts = await catalogService.GetPendingPostsAsync(ct);
@@ -87,6 +88,13 @@ public sealed class Worker(
         }
         else
         {
+            if (!allowRedditApiFallback)
+            {
+                logger.LogInformation(
+                    "No pending catalog entries and Reddit API fallback is disabled (Pipeline:AllowRedditApiFallback=false). Exiting.");
+                return;
+            }
+
             logger.LogInformation("No pending catalog entries — fetching from Reddit API.");
 
             foreach (var subreddit in subreddits)
