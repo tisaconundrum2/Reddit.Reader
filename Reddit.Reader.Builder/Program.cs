@@ -3,6 +3,10 @@ using Reddit.Reader.Builder.Services;
 
 var builder = Host.CreateApplicationBuilder(args);
 
+// Allow `--seed-catalog` as a standalone flag (no value required).
+if (args.Contains("--seed-catalog"))
+    builder.Configuration["Pipeline:SeedCatalog"] = "true";
+
 builder.Services.AddHttpClient();
 builder.Services.ConfigureHttpClientDefaults(b => b
     .ConfigureHttpClient(c => c.Timeout = TimeSpan.FromMinutes(10))
