@@ -2,60 +2,56 @@ using System.Text.Json.Serialization;
 
 namespace Reddit.Reader.Builder.Models;
 
-public sealed class RedditPost
+public sealed record RedditPost
 {
     [JsonPropertyName("id")]
-    public string PostId { get; set; } = string.Empty;
+    public string PostId { get; init; } = string.Empty;
+
+    [JsonPropertyName("subreddit")]
+    public string Subreddit { get; init; } = string.Empty;
 
     [JsonPropertyName("title")]
-    public string Title { get; set; } = string.Empty;
+    public string Title { get; init; } = string.Empty;
 
     [JsonPropertyName("selftext")]
-    public string Selftext { get; set; } = string.Empty;
-
-    [JsonPropertyName("score")]
-    public int Score { get; set; }
-
-    [JsonPropertyName("num_comments")]
-    public int NumComments { get; set; }
+    public string Selftext { get; init; } = string.Empty;
 
     [JsonPropertyName("author")]
-    public string Author { get; set; } = string.Empty;
+    public string Author { get; init; } = string.Empty;
 
     [JsonPropertyName("permalink")]
-    public string Permalink { get; set; } = string.Empty;
+    public string Permalink { get; init; } = string.Empty;
 
-    [JsonPropertyName("created_utc")]
-    public long CreatedUtc { get; set; }
+    [JsonPropertyName("score")]
+    public int Score { get; init; }
 
-    /// <summary>Populated by RedditService after deserialization; not part of the API payload.</summary>
-    [JsonIgnore]
-    public string Subreddit { get; set; } = string.Empty;
+    [JsonPropertyName("num_comments")]
+    public int NumComments { get; init; }
 }
 
-public sealed class RedditChild
+public sealed record RedditChild
 {
     [JsonPropertyName("kind")]
-    public string Kind { get; set; } = string.Empty;
+    public string Kind { get; init; } = string.Empty;
 
     [JsonPropertyName("data")]
-    public RedditPost? Data { get; set; }
+    public RedditPost? Data { get; init; }
 }
 
-public sealed class RedditListingData
+public sealed record RedditListingData
 {
     [JsonPropertyName("children")]
-    public List<RedditChild> Children { get; set; } = [];
+    public IReadOnlyList<RedditChild> Children { get; init; } = [];
 
     [JsonPropertyName("after")]
-    public string? After { get; set; }
+    public string? After { get; init; }
 }
 
-public sealed class RedditListing
+public sealed record RedditListing
 {
     [JsonPropertyName("kind")]
-    public string Kind { get; set; } = string.Empty;
+    public string Kind { get; init; } = string.Empty;
 
     [JsonPropertyName("data")]
-    public RedditListingData? Data { get; set; }
+    public RedditListingData? Data { get; init; }
 }

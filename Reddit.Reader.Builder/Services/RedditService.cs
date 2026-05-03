@@ -63,7 +63,6 @@ public sealed class RedditService(
             if (string.IsNullOrEmpty(postId) || seen.Contains(postId) || string.IsNullOrWhiteSpace(post.Title))
                 continue;
 
-            post.Subreddit = subreddit;
             newPosts.Add(post);
             seen.Add(postId);
         }
