@@ -33,4 +33,12 @@ public sealed class CatalogEntry
 
     [JsonPropertyName("processedAt")]
     public DateTimeOffset ProcessedAt { get; set; }
+
+    /// <summary>True when this entry was seeded locally but not yet processed by the full pipeline.</summary>
+    [JsonPropertyName("pending")]
+    public bool Pending { get; set; }
+
+    /// <summary>Raw post body stored during seeding so the pipeline never needs to call the Reddit API.</summary>
+    [JsonPropertyName("selftext")]
+    public string? Selftext { get; set; }
 }
