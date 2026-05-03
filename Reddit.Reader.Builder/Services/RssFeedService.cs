@@ -17,7 +17,7 @@ public sealed class RssFeedService(
         var feedFile = config["Pipeline:FeedFile"] ?? "feed.xml";
         var feedBaseUrl = config["Pipeline:FeedBaseUrl"] ?? string.Empty;
         var downloadUrl = string.IsNullOrWhiteSpace(feedBaseUrl)
-            ? mp3File.FullName
+            ? mp3File.Name
             : $"{feedBaseUrl.TrimEnd('/')}/{mp3File.Name}";
 
         var doc = LoadOrCreateFeed(feedFile);

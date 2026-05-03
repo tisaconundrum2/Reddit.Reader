@@ -123,7 +123,7 @@ public sealed class Worker(
             }
 
             var mp3Url = string.IsNullOrWhiteSpace(feedBaseUrl)
-                ? mp3File.FullName
+                ? mp3File.Name
                 : $"{feedBaseUrl.TrimEnd('/')}/{mp3File.Name}";
 
             // Step 4: Update RSS feed — persisted immediately; failure here does not abort the post
