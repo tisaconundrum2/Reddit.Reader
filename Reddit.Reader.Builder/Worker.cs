@@ -13,6 +13,16 @@ public sealed class Worker(
     IHostApplicationLifetime lifetime,
     ILogger<Worker> logger) : BackgroundService
 {
+    private readonly List<PipelineItem> _items = [];
+
+    private record PipelineItem(RedditPost Post)
+    {
+        public string? CleanedText { get; set; }
+        public FileInfo? Mp3File { get; set; }
+        public string? Mp3Url { get; set; }
+        public bool Failed { get; set; }
+    }
+
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         var subreddits = config.GetSection("Reddit:Subreddits").Get<string[]>()
@@ -21,15 +31,17 @@ public sealed class Worker(
 
         try
         {
+            await BuildCatalogAsync(subreddits, filter, stoppingToken);
             if (config.GetValue<bool>("Pipeline:SeedCatalog"))
             {
-                await SeedCatalogAsync(subreddits, filter, stoppingToken);
+                logger.LogInformation("Seeded catalog only; skipping processing steps.");
+                return;
             }
-            else
-            {
-                var postLimit = int.TryParse(config["Pipeline:PostLimit"], out var l) ? l : 1;
-                await RunPipelineAsync(subreddits, filter, postLimit, stoppingToken);
-            }
+
+            await CleanPostsAsync(stoppingToken);
+            await GenerateTtsAsync(stoppingToken);
+            await UpdateRssFeedAsync(stoppingToken);
+            await RecordToCatalogAsync(stoppingToken);
         }
         finally
         {
@@ -37,106 +49,37 @@ public sealed class Worker(
         }
     }
 
-    private async Task SeedCatalogAsync(string[] subreddits, string filter, CancellationToken ct)
+    private async Task BuildCatalogAsync(string[] subreddits, string filter, CancellationToken ct)
     {
-        logger.LogInformation("=== Seed mode: cataloguing posts as pending (no TTS/RSS) ===");
-        int seeded = 0;
-
+        // --- Seed: fetch from Reddit and add pending entries to catalog ---
+        logger.LogInformation("Fetching from Reddit for r/{Subreddits} ({Filter} filter)...", string.Join(", ", subreddits), filter);
         foreach (var subreddit in subreddits)
         {
-            List<RedditPost> posts;
             try
             {
-                posts = await redditService.FetchNewPostsAsync(subreddit, filter, ct);
+                var posts = await redditService.FetchNewPostsAsync(subreddit, filter, ct);
+                await catalogService.SeedPostsAsync(posts, ct);
+                logger.LogInformation("Seeded {Count} posts for r/{Subreddit}.", posts.Count, subreddit);
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "[seed] ERROR fetching r/{Subreddit}", subreddit);
-                continue;
-            }
-
-            foreach (var post in posts)
-            {
-                try
-                {
-                    await catalogService.SeedEntryAsync(post, ct);
-                    seeded++;
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError(ex, "[seed] ERROR seeding {PostId}", post.PostId);
-                }
+                logger.LogError(ex, "ERROR seeding r/{Subreddit}", subreddit);
             }
         }
 
-        logger.LogInformation("=== Seed done === {Seeded} post(s) added as pending.", seeded);
-    }
+        if (config.GetValue<bool>("Pipeline:SeedCatalog"))
+            return;
 
-    private async Task RunPipelineAsync(string[] subreddits, string filter, int postLimit, CancellationToken ct)
-    {
-        logger.LogInformation("=== Step 1: Resolve posts (limit: {Limit}) ===", postLimit);
-        var allowRedditApiFallback = config.GetValue("Pipeline:AllowRedditApiFallback", false);
-
-        // Prefer pending catalog entries so GHA never needs to call the Reddit API.
+        // --- Resolve: pull pending entries and populate _items ---
+        var postLimit = int.TryParse(config["Pipeline:PostLimit"], out var l) ? l : 1;
         var allPosts = await catalogService.GetPendingPostsAsync(ct);
 
-        if (allPosts.Count > 0)
+        logger.LogInformation("Found {Count} pending post(s) in catalog.", allPosts.Count);
+
+        if (allPosts.Count == 0)
         {
-            logger.LogInformation(
-                "Using {Count} pending post(s) from catalog (skipping Reddit API).",
-                allPosts.Count);
-        }
-        else
-        {
-            if (!allowRedditApiFallback)
-            {
-                logger.LogInformation(
-                    "No pending catalog entries and Reddit API fallback is disabled (Pipeline:AllowRedditApiFallback=false). Exiting.");
-                return;
-            }
-
-            logger.LogInformation("No pending catalog entries — fetching from Reddit API.");
-
-            foreach (var subreddit in subreddits)
-            {
-                try
-                {
-                    var posts = await redditService.FetchNewPostsAsync(subreddit, filter, ct);
-                    allPosts.AddRange(posts);
-                }
-                catch (Exception ex)
-                {
-                    logger.LogError(ex, "[fetch] ERROR r/{Subreddit}", subreddit);
-                }
-            }
-
-            if (allPosts.Count == 0)
-            {
-                logger.LogInformation("No new posts found.");
-                return;
-            }
-
-            // Filter out posts already in catalog (pending or completed).
-            var unconverted = new List<RedditPost>();
-            foreach (var p in allPosts)
-            {
-                if (!await catalogService.ExistsAsync(p.PostId, ct))
-                    unconverted.Add(p);
-            }
-
-            logger.LogInformation(
-                "Catalog status: {Total} fetched | {Already} already in catalog | {Pending} to convert.",
-                allPosts.Count,
-                allPosts.Count - unconverted.Count,
-                unconverted.Count);
-
-            if (unconverted.Count == 0)
-            {
-                logger.LogInformation("All fetched posts are already in catalog. Nothing to do.");
-                return;
-            }
-
-            allPosts = unconverted;
+            logger.LogInformation("No pending posts to process.");
+            return;
         }
 
         if (postLimit > 0 && allPosts.Count > postLimit)
@@ -145,71 +88,94 @@ public sealed class Worker(
             allPosts = allPosts[..postLimit];
         }
 
-        logger.LogInformation("Processing {Count} post(s).", allPosts.Count);
+        _items.Clear();
+        _items.AddRange(allPosts.Select(p => new PipelineItem(p)));
 
+        logger.LogInformation("Resolved {Count} post(s).", _items.Count);
+    }
+
+    private async Task CleanPostsAsync(CancellationToken ct)
+    {
+        logger.LogInformation("=== Step 2: Clean posts ===");
+
+        foreach (var item in _items.Where(i => !i.Failed))
+        {
+            try
+            {
+                item.CleanedText = await cleaningService.CleanAsync(item.Post.Title, item.Post.Selftext, ct);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "  [clean] FAILED for {PostId}", item.Post.PostId);
+                item.Failed = true;
+            }
+        }
+    }
+
+    private async Task GenerateTtsAsync(CancellationToken ct)
+    {
+        logger.LogInformation("=== Step 3: Generate TTS ===");
         var feedBaseUrl = config["Pipeline:FeedBaseUrl"] ?? string.Empty;
+
+        foreach (var item in _items.Where(i => !i.Failed))
+        {
+            try
+            {
+                var ttsText = $"{item.Post.Title}.\n\n{item.CleanedText}";
+                item.Mp3File = await ttsService.GenerateMp3Async(item.Post.PostId, ttsText, null, ct);
+                item.Mp3Url = string.IsNullOrWhiteSpace(feedBaseUrl)
+                    ? item.Mp3File.Name
+                    : $"{feedBaseUrl.TrimEnd('/')}/{item.Mp3File.Name}";
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "  [tts] FAILED for {PostId}", item.Post.PostId);
+                item.Failed = true;
+            }
+        }
+    }
+
+    private async Task UpdateRssFeedAsync(CancellationToken ct)
+    {
+        logger.LogInformation("=== Step 4: Update RSS feed ===");
+
+        foreach (var item in _items.Where(i => !i.Failed))
+        {
+            try
+            {
+                await rssFeedService.AddEpisodeAsync(item.Post, item.Mp3File!, ct);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "  [rss] FAILED for {PostId}", item.Post.PostId);
+            }
+        }
+    }
+
+    private async Task RecordToCatalogAsync(CancellationToken ct)
+    {
+        logger.LogInformation("=== Step 5: Record to catalog ===");
         int succeeded = 0, failed = 0;
 
-        for (int i = 0; i < allPosts.Count; i++)
+        foreach (var item in _items)
         {
-            var post = allPosts[i];
-            logger.LogInformation("--- Post {Index}/{Total}: {PostId} ---", i + 1, allPosts.Count, post.PostId);
-            logger.LogInformation("    {Title}", post.Title[..Math.Min(70, post.Title.Length)]);
-
-            // Step 2: Clean
-            string cleanedText;
-            try
+            if (item.Failed)
             {
-                cleanedText = await cleaningService.CleanAsync(post.Title, post.Selftext, ct);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "  [clean] FAILED for {PostId}", post.PostId);
                 failed++;
                 continue;
             }
 
-            // Step 3: TTS → save MP3 locally
-            // Prepend the title with a pause before the cleaned body
-            var ttsText = $"{post.Title}.\n\n{cleanedText}";
-            FileInfo mp3File;
             try
             {
-                mp3File = await ttsService.GenerateMp3Async(post.PostId, ttsText, null, ct);
+                await catalogService.AddEntryAsync(item.Post, item.Mp3File!, item.Mp3Url!, ct);
+                redditService.MarkSeen(item.Post.PostId);
+                succeeded++;
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "  [tts] FAILED for {PostId}", post.PostId);
+                logger.LogError(ex, "  [catalog] FAILED for {PostId}", item.Post.PostId);
                 failed++;
-                continue;
             }
-
-            var mp3Url = string.IsNullOrWhiteSpace(feedBaseUrl)
-                ? mp3File.Name
-                : $"{feedBaseUrl.TrimEnd('/')}/{mp3File.Name}";
-
-            // Step 4: Update RSS feed — persisted immediately; failure here does not abort the post
-            try
-            {
-                await rssFeedService.AddEpisodeAsync(post, mp3File, ct);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "  [rss] FAILED for {PostId}", post.PostId);
-            }
-
-            // Step 5: Record to catalog
-            try
-            {
-                await catalogService.AddEntryAsync(post, mp3File, mp3Url, ct);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError(ex, "  [catalog] FAILED for {PostId}", post.PostId);
-            }
-
-            redditService.MarkSeen(post.PostId);
-            succeeded++;
         }
 
         logger.LogInformation("=== Done === Succeeded: {Succeeded} | Failed: {Failed}", succeeded, failed);

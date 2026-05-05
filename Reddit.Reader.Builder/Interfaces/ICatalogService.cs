@@ -26,4 +26,9 @@ public interface ICatalogService
     /// Returns true if the post ID already has a catalog entry (pending or completed).
     /// </summary>
     Task<bool> ExistsAsync(string postId, CancellationToken ct = default);
+
+    /// <summary>
+    /// Adds pending entries for all given posts. This is a batch version of SeedEntryAsync()
+    /// </summary>
+    Task SeedPostsAsync(List<RedditPost> posts, CancellationToken ct);
 }

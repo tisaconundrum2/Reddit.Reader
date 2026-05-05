@@ -97,6 +97,14 @@ public sealed class CatalogService(
             .ToList();
     }
 
+    public async Task SeedPostsAsync(List<RedditPost> posts, CancellationToken ct)
+    {
+        foreach (var post in posts)
+        {
+            await SeedEntryAsync(post, ct);
+        }
+    }
+
     public async Task<bool> ExistsAsync(string postId, CancellationToken ct = default)
     {
         var entries = await LoadAsync(GetCatalogPath(), ct);
