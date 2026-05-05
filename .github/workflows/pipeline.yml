@@ -2,7 +2,7 @@ name: Reddit Reader Pipeline
 
 on:
   schedule:
-    - cron: "0 6 * * *"   # Daily at 06:00 UTC
+    - cron: "*/15 * * * *"  # Every 15 minutes
   workflow_dispatch:        # Manual trigger from the Actions tab
 
 permissions:
@@ -78,7 +78,7 @@ jobs:
           Pipeline__SeenIdsFile: ${{ github.workspace }}/output/seen_ids.json
           Pipeline__FeedFile: ${{ github.workspace }}/output/feed-0001.xml
           Pipeline__FeedBaseUrl: https://tisaconundrum2.github.io/Reddit.Reader
-          Pipeline__PostLimit: ${{ vars.POST_LIMIT || '1000' }}
+          Pipeline__PostLimit: ${{ vars.POST_LIMIT || '2' }}
           KokoroTts__BaseUrl: http://localhost:5000
         run: |
           mkdir -p ${{ github.workspace }}/output
