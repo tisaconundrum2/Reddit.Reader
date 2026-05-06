@@ -686,34 +686,6 @@
     "selftext": null
   },
   {
-    "postId": "1sd8r41",
-    "subreddit": "TalesFromThePharmacy",
-    "title": "Where is all the Taxol?!?",
-    "author": "BertBalsam",
-    "permalink": "/r/TalesFromThePharmacy/comments/1sd8r41/where_is_all_the_taxol/",
-    "score": 111,
-    "numComments": 16,
-    "mp3FileName": "",
-    "mp3Url": "",
-    "processedAt": "2026-05-05T02:53:23.317704+00:00",
-    "pending": true,
-    "selftext": "None of the men working in our pharmacy can find this drug! What gives?"
-  },
-  {
-    "postId": "1sd1tcd",
-    "subreddit": "TalesFromThePharmacy",
-    "title": "[Weekly thread] Your end of the week rants and raves!",
-    "author": "AutoModerator",
-    "permalink": "/r/TalesFromThePharmacy/comments/1sd1tcd/weekly_thread_your_end_of_the_week_rants_and_raves/",
-    "score": 2,
-    "numComments": 0,
-    "mp3FileName": "",
-    "mp3Url": "",
-    "processedAt": "2026-05-05T02:53:23.320548+00:00",
-    "pending": true,
-    "selftext": " Do you have a rant or rave that you want to get off your chest but didn\u0027t feel like submitting your own thread?  That\u0027s totally fine!  Go ahead and post it here.  That way we can all rant and rave about it with you!"
-  },
-  {
     "postId": "1sbsex0",
     "subreddit": "TalesFromThePharmacy",
     "title": "Called the pharmacist because I was worried, without realizing it was April 1st!",
@@ -2964,6 +2936,34 @@
     "mp3FileName": "1setxb4.mp3",
     "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/1setxb4.mp3",
     "processedAt": "2026-05-06T23:17:42.0282324+00:00",
+    "pending": false,
+    "selftext": null
+  },
+  {
+    "postId": "1sd8r41",
+    "subreddit": "TalesFromThePharmacy",
+    "title": "Where is all the Taxol?!?",
+    "author": "BertBalsam",
+    "permalink": "/r/TalesFromThePharmacy/comments/1sd8r41/where_is_all_the_taxol/",
+    "score": 111,
+    "numComments": 16,
+    "mp3FileName": "1sd8r41.mp3",
+    "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/1sd8r41.mp3",
+    "processedAt": "2026-05-06T23:47:01.3145179+00:00",
+    "pending": false,
+    "selftext": null
+  },
+  {
+    "postId": "1sd1tcd",
+    "subreddit": "TalesFromThePharmacy",
+    "title": "[Weekly thread] Your end of the week rants and raves!",
+    "author": "AutoModerator",
+    "permalink": "/r/TalesFromThePharmacy/comments/1sd1tcd/weekly_thread_your_end_of_the_week_rants_and_raves/",
+    "score": 2,
+    "numComments": 0,
+    "mp3FileName": "1sd1tcd.mp3",
+    "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/1sd1tcd.mp3",
+    "processedAt": "2026-05-06T23:47:01.3266917+00:00",
     "pending": false,
     "selftext": null
   }
