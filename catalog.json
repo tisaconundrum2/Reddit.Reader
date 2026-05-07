@@ -686,34 +686,6 @@
     "selftext": null
   },
   {
-    "postId": "bseeo2",
-    "subreddit": "talesfromit",
-    "title": "Just so I remember to claim this sub",
-    "author": "Boomer8450",
-    "permalink": "/r/talesfromit/comments/bseeo2/just_so_i_remember_to_claim_this_sub/",
-    "score": 3,
-    "numComments": 4,
-    "mp3FileName": "",
-    "mp3Url": "",
-    "processedAt": "2026-05-05T02:53:23.683129+00:00",
-    "pending": true,
-    "selftext": ""
-  },
-  {
-    "postId": "1t36xhr",
-    "subreddit": "worldnews",
-    "title": "/r/WorldNews Live Thread: Russian Invasion of Ukraine Day 1530, Part 1 (Thread #1677)",
-    "author": "WorldNewsMods",
-    "permalink": "/r/worldnews/comments/1t36xhr/rworldnews_live_thread_russian_invasion_of/",
-    "score": 540,
-    "numComments": 159,
-    "mp3FileName": "",
-    "mp3Url": "",
-    "processedAt": "2026-05-05T02:53:24.34898+00:00",
-    "pending": true,
-    "selftext": ""
-  },
-  {
     "postId": "1t1399d",
     "subreddit": "worldnews",
     "title": "/r/WorldNews Discussion Thread: US and Israel launch attack on Iran; Iran retaliates (Thread #17)",
@@ -2964,6 +2936,34 @@
     "mp3FileName": "eouqj2.mp3",
     "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/eouqj2.mp3",
     "processedAt": "2026-05-07T09:57:37.6996886+00:00",
+    "pending": false,
+    "selftext": null
+  },
+  {
+    "postId": "bseeo2",
+    "subreddit": "talesfromit",
+    "title": "Just so I remember to claim this sub",
+    "author": "Boomer8450",
+    "permalink": "/r/talesfromit/comments/bseeo2/just_so_i_remember_to_claim_this_sub/",
+    "score": 3,
+    "numComments": 4,
+    "mp3FileName": "bseeo2.mp3",
+    "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/bseeo2.mp3",
+    "processedAt": "2026-05-07T10:45:45.020123+00:00",
+    "pending": false,
+    "selftext": null
+  },
+  {
+    "postId": "1t36xhr",
+    "subreddit": "worldnews",
+    "title": "/r/WorldNews Live Thread: Russian Invasion of Ukraine Day 1530, Part 1 (Thread #1677)",
+    "author": "WorldNewsMods",
+    "permalink": "/r/worldnews/comments/1t36xhr/rworldnews_live_thread_russian_invasion_of/",
+    "score": 540,
+    "numComments": 159,
+    "mp3FileName": "1t36xhr.mp3",
+    "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/1t36xhr.mp3",
+    "processedAt": "2026-05-07T10:45:45.0319224+00:00",
     "pending": false,
     "selftext": null
   }
