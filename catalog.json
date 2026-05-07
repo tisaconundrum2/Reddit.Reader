@@ -686,34 +686,6 @@
     "selftext": null
   },
   {
-    "postId": "1t3kwgh",
-    "subreddit": "worldnews",
-    "title": "UAE says it intercepted Iranian missiles for first time since ceasefire began",
-    "author": "Force_Hammer",
-    "permalink": "/r/worldnews/comments/1t3kwgh/uae_says_it_intercepted_iranian_missiles_for/",
-    "score": 2026,
-    "numComments": 349,
-    "mp3FileName": "",
-    "mp3Url": "",
-    "processedAt": "2026-05-05T02:53:24.381899+00:00",
-    "pending": true,
-    "selftext": ""
-  },
-  {
-    "postId": "1t3h683",
-    "subreddit": "worldnews",
-    "title": "Evacuations planned as suspected hantavirus outbreak traps 150 on ship off Cape Verde",
-    "author": "yahoonews",
-    "permalink": "/r/worldnews/comments/1t3h683/evacuations_planned_as_suspected_hantavirus/",
-    "score": 2719,
-    "numComments": 219,
-    "mp3FileName": "",
-    "mp3Url": "",
-    "processedAt": "2026-05-05T02:53:24.384102+00:00",
-    "pending": true,
-    "selftext": ""
-  },
-  {
     "postId": "1t3oozy",
     "subreddit": "worldnews",
     "title": "U.A.E. says Iran has resumed attacks as U.S. moves to reopen Strait of Hormuz",
@@ -2964,6 +2936,34 @@
     "mp3FileName": "1t3c23e.mp3",
     "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/1t3c23e.mp3",
     "processedAt": "2026-05-07T15:56:37.8900544+00:00",
+    "pending": false,
+    "selftext": null
+  },
+  {
+    "postId": "1t3kwgh",
+    "subreddit": "worldnews",
+    "title": "UAE says it intercepted Iranian missiles for first time since ceasefire began",
+    "author": "Force_Hammer",
+    "permalink": "/r/worldnews/comments/1t3kwgh/uae_says_it_intercepted_iranian_missiles_for/",
+    "score": 2026,
+    "numComments": 349,
+    "mp3FileName": "1t3kwgh.mp3",
+    "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/1t3kwgh.mp3",
+    "processedAt": "2026-05-07T16:25:03.5899536+00:00",
+    "pending": false,
+    "selftext": null
+  },
+  {
+    "postId": "1t3h683",
+    "subreddit": "worldnews",
+    "title": "Evacuations planned as suspected hantavirus outbreak traps 150 on ship off Cape Verde",
+    "author": "yahoonews",
+    "permalink": "/r/worldnews/comments/1t3h683/evacuations_planned_as_suspected_hantavirus/",
+    "score": 2719,
+    "numComments": 219,
+    "mp3FileName": "1t3h683.mp3",
+    "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/1t3h683.mp3",
+    "processedAt": "2026-05-07T16:25:03.6018652+00:00",
     "pending": false,
     "selftext": null
   }
