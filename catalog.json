@@ -686,34 +686,6 @@
     "selftext": null
   },
   {
-    "postId": "11w6hnd",
-    "subreddit": "talesfromthebank",
-    "title": "Yeah but do we get a day off?",
-    "author": "Dstareternl",
-    "permalink": "/r/talesfromthebank/comments/11w6hnd/yeah_but_do_we_get_a_day_off/",
-    "score": 2,
-    "numComments": 0,
-    "mp3FileName": "",
-    "mp3Url": "",
-    "processedAt": "2026-05-05T02:53:23.505167+00:00",
-    "pending": true,
-    "selftext": ""
-  },
-  {
-    "postId": "cxw2xj",
-    "subreddit": "talesfromit",
-    "title": "How do you not know better?!",
-    "author": "Lady_L1985",
-    "permalink": "/r/talesfromit/comments/cxw2xj/how_do_you_not_know_better/",
-    "score": 19,
-    "numComments": 3,
-    "mp3FileName": "",
-    "mp3Url": "",
-    "processedAt": "2026-05-05T02:53:23.670879+00:00",
-    "pending": true,
-    "selftext": "My husband works for a company that is basically IT for small businesses that aren\u2019t big enough to have their own IT department.  The main office is in southern Florida, and because of Hurricane Dorian, it was decided that they\u2019d shut down their servers over the weekend.\n\nEvery single client received an email to that effect.  Physical servers will be down all weekend because of the hurricane; the office won\u2019t open up until Tuesday because of Labor Day; we can\u2019t turn the servers on for just you.\n\nOne client in the Bahamas (RIGHT IN THE PATH OF THE HURRICANE) called the office this morning to complain that he couldn\u2019t access his work server.  He said that this was unacceptable and he needed the servers to stay up all weekend for his business.\n\nDude.  You are from the Bahamas.  You know how hurricanes work. Plus you got an email about this last night, AND your office is, just to be clear, **directly in the path of an oncoming Cat 4 hurricane.**\n\nSo my husband sent him another copy of the email, with the relevant bit about the office being closed AND all servers being down bolded for his benefit."
-  },
-  {
     "postId": "tgf1y0",
     "subreddit": "talesfromit",
     "title": "when you are not allowed to call someone stupid",
@@ -2964,6 +2936,34 @@
     "mp3FileName": "1250usn.mp3",
     "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/1250usn.mp3",
     "processedAt": "2026-05-07T06:56:53.8256235+00:00",
+    "pending": false,
+    "selftext": null
+  },
+  {
+    "postId": "11w6hnd",
+    "subreddit": "talesfromthebank",
+    "title": "Yeah but do we get a day off?",
+    "author": "Dstareternl",
+    "permalink": "/r/talesfromthebank/comments/11w6hnd/yeah_but_do_we_get_a_day_off/",
+    "score": 2,
+    "numComments": 0,
+    "mp3FileName": "11w6hnd.mp3",
+    "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/11w6hnd.mp3",
+    "processedAt": "2026-05-07T08:02:03.6742113+00:00",
+    "pending": false,
+    "selftext": null
+  },
+  {
+    "postId": "cxw2xj",
+    "subreddit": "talesfromit",
+    "title": "How do you not know better?!",
+    "author": "Lady_L1985",
+    "permalink": "/r/talesfromit/comments/cxw2xj/how_do_you_not_know_better/",
+    "score": 19,
+    "numComments": 3,
+    "mp3FileName": "cxw2xj.mp3",
+    "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/cxw2xj.mp3",
+    "processedAt": "2026-05-07T08:02:03.6865454+00:00",
     "pending": false,
     "selftext": null
   }
