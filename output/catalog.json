@@ -686,34 +686,6 @@
     "selftext": null
   },
   {
-    "postId": "1t3z180",
-    "subreddit": "worldnews",
-    "title": "Putin and Zelensky both unilaterally declare conflicting 2-day truces",
-    "author": "clamorous_owle",
-    "permalink": "/r/worldnews/comments/1t3z180/putin_and_zelensky_both_unilaterally_declare/",
-    "score": 448,
-    "numComments": 38,
-    "mp3FileName": "",
-    "mp3Url": "",
-    "processedAt": "2026-05-05T02:53:24.37758+00:00",
-    "pending": true,
-    "selftext": ""
-  },
-  {
-    "postId": "1t3c23e",
-    "subreddit": "worldnews",
-    "title": "Drone Attack Targets Moscow Building Just Miles Away From Kremlin",
-    "author": "UNITED24Media",
-    "permalink": "/r/worldnews/comments/1t3c23e/drone_attack_targets_moscow_building_just_miles/",
-    "score": 7714,
-    "numComments": 110,
-    "mp3FileName": "",
-    "mp3Url": "",
-    "processedAt": "2026-05-05T02:53:24.379829+00:00",
-    "pending": true,
-    "selftext": ""
-  },
-  {
     "postId": "1t3kwgh",
     "subreddit": "worldnews",
     "title": "UAE says it intercepted Iranian missiles for first time since ceasefire began",
@@ -2964,6 +2936,34 @@
     "mp3FileName": "1t3lohm.mp3",
     "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/1t3lohm.mp3",
     "processedAt": "2026-05-07T14:43:43.6520439+00:00",
+    "pending": false,
+    "selftext": null
+  },
+  {
+    "postId": "1t3z180",
+    "subreddit": "worldnews",
+    "title": "Putin and Zelensky both unilaterally declare conflicting 2-day truces",
+    "author": "clamorous_owle",
+    "permalink": "/r/worldnews/comments/1t3z180/putin_and_zelensky_both_unilaterally_declare/",
+    "score": 448,
+    "numComments": 38,
+    "mp3FileName": "1t3z180.mp3",
+    "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/1t3z180.mp3",
+    "processedAt": "2026-05-07T15:56:37.8776915+00:00",
+    "pending": false,
+    "selftext": null
+  },
+  {
+    "postId": "1t3c23e",
+    "subreddit": "worldnews",
+    "title": "Drone Attack Targets Moscow Building Just Miles Away From Kremlin",
+    "author": "UNITED24Media",
+    "permalink": "/r/worldnews/comments/1t3c23e/drone_attack_targets_moscow_building_just_miles/",
+    "score": 7714,
+    "numComments": 110,
+    "mp3FileName": "1t3c23e.mp3",
+    "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/1t3c23e.mp3",
+    "processedAt": "2026-05-07T15:56:37.8900544+00:00",
     "pending": false,
     "selftext": null
   }
