@@ -686,34 +686,6 @@
     "selftext": null
   },
   {
-    "postId": "1269bgy",
-    "subreddit": "talesfromthebank",
-    "title": "I\u2019m sold",
-    "author": "Dstareternl",
-    "permalink": "/r/talesfromthebank/comments/1269bgy/im_sold/",
-    "score": 3,
-    "numComments": 0,
-    "mp3FileName": "",
-    "mp3Url": "",
-    "processedAt": "2026-05-05T02:53:23.50108+00:00",
-    "pending": true,
-    "selftext": ""
-  },
-  {
-    "postId": "1250usn",
-    "subreddit": "talesfromthebank",
-    "title": "Lady came in and said she died eight times like Justin Bieber...",
-    "author": "Volixagarde",
-    "permalink": "/r/talesfromthebank/comments/1250usn/lady_came_in_and_said_she_died_eight_times_like/",
-    "score": 1,
-    "numComments": 0,
-    "mp3FileName": "",
-    "mp3Url": "",
-    "processedAt": "2026-05-05T02:53:23.503284+00:00",
-    "pending": true,
-    "selftext": "User moved to Squabbles.io! Please consider joining me in replacing your comments and joining a new community! [url]https://squabbles.io/[/url] -- mass edited with https://redact.dev/"
-  },
-  {
     "postId": "11w6hnd",
     "subreddit": "talesfromthebank",
     "title": "Yeah but do we get a day off?",
@@ -2964,6 +2936,34 @@
     "mp3FileName": "129b31b.mp3",
     "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/129b31b.mp3",
     "processedAt": "2026-05-07T05:51:38.1974791+00:00",
+    "pending": false,
+    "selftext": null
+  },
+  {
+    "postId": "1269bgy",
+    "subreddit": "talesfromthebank",
+    "title": "I\u2019m sold",
+    "author": "Dstareternl",
+    "permalink": "/r/talesfromthebank/comments/1269bgy/im_sold/",
+    "score": 3,
+    "numComments": 0,
+    "mp3FileName": "1269bgy.mp3",
+    "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/1269bgy.mp3",
+    "processedAt": "2026-05-07T06:56:53.8139932+00:00",
+    "pending": false,
+    "selftext": null
+  },
+  {
+    "postId": "1250usn",
+    "subreddit": "talesfromthebank",
+    "title": "Lady came in and said she died eight times like Justin Bieber...",
+    "author": "Volixagarde",
+    "permalink": "/r/talesfromthebank/comments/1250usn/lady_came_in_and_said_she_died_eight_times_like/",
+    "score": 1,
+    "numComments": 0,
+    "mp3FileName": "1250usn.mp3",
+    "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/1250usn.mp3",
+    "processedAt": "2026-05-07T06:56:53.8256235+00:00",
     "pending": false,
     "selftext": null
   }
