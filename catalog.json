@@ -686,34 +686,6 @@
     "selftext": null
   },
   {
-    "postId": "1jomgea",
-    "subreddit": "talesfromthebank",
-    "title": "Need advice on helping a customer with their fraud case",
-    "author": "Sweet-Swimming2022",
-    "permalink": "/r/talesfromthebank/comments/1jomgea/need_advice_on_helping_a_customer_with_their/",
-    "score": 1,
-    "numComments": 0,
-    "mp3FileName": "",
-    "mp3Url": "",
-    "processedAt": "2026-05-05T02:53:23.496693+00:00",
-    "pending": true,
-    "selftext": "Hello all!\n\nThe other day, a customer came into the branch saying their dispute for their fraud case had been denied. The back story is that the customer woke up that morning and noticed a charge on their card for $400 from a mysterious website. They put in a dispute claim and the bank ultimately denied the claim saying the customer was at fault. The guy was super polite and also confused as he was elderly and not so great with technology. I called the back office fraud department and they said that the \u201Ctokens\u201D matched on the transaction and asked if he gave anyone access to his phone or other mobile device. The man said he has never done that and has no idea how this charge came about. We tried calling the merchant but they were useless. My questions is, what are \u201Ctokens\u201D and what can I do to help this individual? I truly believe he did not authorize this purchase. The back office says that he can file a police report but will that do any good?"
-  },
-  {
-    "postId": "129b31b",
-    "subreddit": "talesfromthebank",
-    "title": "True.",
-    "author": "Dstareternl",
-    "permalink": "/r/talesfromthebank/comments/129b31b/true/",
-    "score": 4,
-    "numComments": 0,
-    "mp3FileName": "",
-    "mp3Url": "",
-    "processedAt": "2026-05-05T02:53:23.499052+00:00",
-    "pending": true,
-    "selftext": ""
-  },
-  {
     "postId": "1269bgy",
     "subreddit": "talesfromthebank",
     "title": "I\u2019m sold",
@@ -2964,6 +2936,34 @@
     "mp3FileName": "11v3n6x.mp3",
     "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/11v3n6x.mp3",
     "processedAt": "2026-05-07T04:43:02.6733672+00:00",
+    "pending": false,
+    "selftext": null
+  },
+  {
+    "postId": "1jomgea",
+    "subreddit": "talesfromthebank",
+    "title": "Need advice on helping a customer with their fraud case",
+    "author": "Sweet-Swimming2022",
+    "permalink": "/r/talesfromthebank/comments/1jomgea/need_advice_on_helping_a_customer_with_their/",
+    "score": 1,
+    "numComments": 0,
+    "mp3FileName": "1jomgea.mp3",
+    "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/1jomgea.mp3",
+    "processedAt": "2026-05-07T05:51:38.1820708+00:00",
+    "pending": false,
+    "selftext": null
+  },
+  {
+    "postId": "129b31b",
+    "subreddit": "talesfromthebank",
+    "title": "True.",
+    "author": "Dstareternl",
+    "permalink": "/r/talesfromthebank/comments/129b31b/true/",
+    "score": 4,
+    "numComments": 0,
+    "mp3FileName": "129b31b.mp3",
+    "mp3Url": "https://tisaconundrum2.github.io/Reddit.Reader/129b31b.mp3",
+    "processedAt": "2026-05-07T05:51:38.1974791+00:00",
     "pending": false,
     "selftext": null
   }
