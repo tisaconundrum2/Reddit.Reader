@@ -1818,5 +1818,37 @@ Every single client received an email to that effect.  Physical servers will be 
       <pubDate>Thu, 07 May 2026 08:02:03 GMT</pubDate>
       <enclosure url="https://tisaconundrum2.github.io/Reddit.Reader/cxw2xj.mp3" length="0" type="audio/mpeg" />
     </item>
+    <item>
+      <title>[r/talesfromit] when you are not allowed to call someone stupid</title>
+      <guid>tgf1y0</guid>
+      <description>Last year I received a call from a user who was unable to login. Standard stuff. Our procedure requires us to ask for the users username and then verify the users identity. 
+The user provides her user id. Alright her account comes up immediately. Confirms identity, so I perform the password reset. Read the user the temporary password. 
+The user recieves an error when trying to login.
+
+Username and or password invalid please retry
+
+I check the users account, no issues.
+
+I give the user the tempor</description>
+      <pubDate>Thu, 07 May 2026 08:55:50 GMT</pubDate>
+      <enclosure url="https://tisaconundrum2.github.io/Reddit.Reader/tgf1y0.mp3" length="0" type="audio/mpeg" />
+    </item>
+    <item>
+      <title>[r/talesfromit] Just a standard ticket...</title>
+      <guid>q8aze7</guid>
+      <description>No names, privacy etc. 
+
+Me - Me
+
+Doc - Doctor 
+
+I'm a systems analyst for a large hospital 
+
+Got a ticket for some doctor that couldn't access his dual authentication app. Standard thing, happens all the time. I go up to meet with him. Guy seems pretty normal, obviously upset his stuff isn't working but doesn't blame it on me, just happy to see someone is working on the issue. Standard conversation of what's going on things that have been tried etc. 
+
+So he gives me his phone and shows me the i</description>
+      <pubDate>Thu, 07 May 2026 08:55:50 GMT</pubDate>
+      <enclosure url="https://tisaconundrum2.github.io/Reddit.Reader/q8aze7.mp3" length="0" type="audio/mpeg" />
+    </item>
   </channel>
 </rss>
