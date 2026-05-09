@@ -14,9 +14,13 @@ public sealed class RedditService(
     {
         var userAgent = config["Reddit:UserAgent"]
             ?? throw new InvalidOperationException("Reddit:UserAgent is not configured.");
-        var seenIdsPath = config["Pipeline:SeenIdsFile"] ?? "seen_ids.json";
 
-        var requestUrl = $"{RedditBase}{subreddit}/{filter}.json?raw_json=1&limit=25";
+        var topPeriod = config["Reddit:TopPeriod"] ?? "month";
+        var minWordCount = int.TryParse(config["Reddit:MinWordCount"], out var mwc) ? mwc : 0;
+
+        var requestUrl = filter.Equals("top", StringComparison.OrdinalIgnoreCase)
+            ? $"{RedditBase}{subreddit}/{filter}.json?t={topPeriod}&raw_json=1&limit=25"
+            : $"{RedditBase}{subreddit}/{filter}.json?raw_json=1&limit=25";
 
         using var client = httpClientFactory.CreateClient();
         var request = new HttpRequestMessage(HttpMethod.Get, requestUrl);
@@ -51,7 +55,6 @@ public sealed class RedditService(
         }
 
         var children = listing?.Data?.Children ?? [];
-        var seen = LoadSeenIds(seenIdsPath);
         var newPosts = new List<RedditPost>();
 
         foreach (var child in children)
@@ -60,8 +63,19 @@ public sealed class RedditService(
             if (post is null) continue;
 
             var postId = post.PostId.Trim();
-            if (string.IsNullOrEmpty(postId) || seen.Contains(postId) || string.IsNullOrWhiteSpace(post.Title))
+            if (string.IsNullOrEmpty(postId) || string.IsNullOrWhiteSpace(post.Title))
                 continue;
+
+            if (minWordCount > 0)
+            {
+                var wordCount = post.Selftext.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Length;
+                if (wordCount < minWordCount)
+                {
+                    logger.LogInformation("[fetch] r/{Subreddit} — skipping \"{Title}\" ({WordCount} words < {Min} minimum)",
+                        subreddit, post.Title[..Math.Min(50, post.Title.Length)], wordCount, minWordCount);
+                    continue;
+                }
+            }
 
             newPosts.Add(post);
         }
@@ -70,32 +84,5 @@ public sealed class RedditService(
         return newPosts;
     }
 
-    public void MarkSeen(string postId)
-    {
-        var seenIdsPath = config["Pipeline:SeenIdsFile"] ?? "seen_ids.json";
-        var seen = LoadSeenIds(seenIdsPath);
-        seen.Add(postId.Trim());
-        SaveSeenIds(seenIdsPath, seen);
-    }
 
-    private static HashSet<string> LoadSeenIds(string path)
-    {
-        if (!File.Exists(path)) return [];
-        try
-        {
-            var json = File.ReadAllText(path);
-            var ids = JsonSerializer.Deserialize<List<string>>(json);
-            return ids is null ? [] : [.. ids];
-        }
-        catch
-        {
-            return [];
-        }
-    }
-
-    private static void SaveSeenIds(string path, HashSet<string> ids)
-    {
-        var sorted = ids.OrderBy(x => x).ToList();
-        File.WriteAllText(path, JsonSerializer.Serialize(sorted, new JsonSerializerOptions { WriteIndented = true }));
-    }
 }

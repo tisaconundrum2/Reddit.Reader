@@ -73,9 +73,10 @@ jobs:
           Reddit__UserAgent: "RedditReader/1.0 by u/tisaconundrum2"
           Reddit__Subreddits__0: MaliciousCompliance
           Reddit__Subreddits__1: ProRevenge
-          Reddit__Filter: hot
+          Reddit__Filter: top
+          Reddit__TopPeriod: month
+          Reddit__MinWordCount: "300"
           Pipeline__OutputDir: ${{ github.workspace }}/output
-          Pipeline__SeenIdsFile: ${{ github.workspace }}/output/seen_ids.json
           Pipeline__FeedFile: ${{ github.workspace }}/output/feed-0001.xml
           Pipeline__FeedBaseUrl: https://tisaconundrum2.github.io/Reddit.Reader
           Pipeline__PostLimit: ${{ vars.POST_LIMIT || '2' }}

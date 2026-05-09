@@ -168,7 +168,6 @@ public sealed class Worker(
             try
             {
                 await catalogService.AddEntryAsync(item.Post, item.Mp3File!, item.Mp3Url!, ct);
-                redditService.MarkSeen(item.Post.PostId);
                 succeeded++;
             }
             catch (Exception ex)

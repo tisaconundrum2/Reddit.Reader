@@ -22,7 +22,6 @@ COPY --from=build /app/publish .
 # environment variables or a mounted appsettings.Production.json.
 ENV DOTNET_ENVIRONMENT=Production \
     Pipeline__OutputDir=/app/output \
-    Pipeline__SeenIdsFile=/app/output/seen_ids.json \
     Pipeline__FeedFile=/app/output/feed-0001.xml
 
 VOLUME ["/app/output"]
