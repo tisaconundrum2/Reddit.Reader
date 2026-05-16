@@ -79,7 +79,7 @@ jobs:
           Pipeline__OutputDir: ${{ github.workspace }}/output
           Pipeline__FeedFile: ${{ github.workspace }}/output/feed-0001.xml
           Pipeline__FeedBaseUrl: https://tisaconundrum2.github.io/Reddit.Reader
-          Pipeline__PostLimit: ${{ vars.POST_LIMIT || '2' }}
+          Pipeline__PostLimit: ${{ vars.POST_LIMIT || '50' }}
           KokoroTts__BaseUrl: http://localhost:5000
         run: |
           mkdir -p ${{ github.workspace }}/output
