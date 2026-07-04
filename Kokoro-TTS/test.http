@@ -15,3 +15,10 @@ User-Agent: MyApp/1.0 by u/tisaconundrum2
 curl -s \
   -H "User-Agent: MyApp/1.0 by u/tisaconundrum2" \
   "https://www.reddit.com/r/MaliciousCompliance/top.json?t=week&limit=25&raw_json=1" \
+
+###
+curl --request GET \
+	--url 'https://reddit3.p.rapidapi.com/v1/reddit/posts?url=https%3A%2F%2Fwww.reddit.com%2Fr%2FMaliciousCompliance&filter=hot' \
+	--header 'Content-Type: application/json' \
+	--header 'x-rapidapi-host: reddit3.p.rapidapi.com' \
+	--header 'x-rapidapi-key: ************************'

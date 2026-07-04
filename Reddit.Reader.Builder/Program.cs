@@ -21,7 +21,8 @@ builder.Services.ConfigureHttpClientDefaults(b => b
         }
     }));
 
-builder.Services.AddSingleton<IRedditService, RedditService>();
+// builder.Services.AddSingleton<IRedditService, RedditService>();
+builder.Services.AddSingleton<IRedditService, RapidApiRedditService>();
 builder.Services.AddSingleton<ITextCleaningService, TextCleaningService>();
 builder.Services.AddSingleton<ITtsService, TtsService>();
 builder.Services.AddSingleton<IRssFeedService, RssFeedService>();
