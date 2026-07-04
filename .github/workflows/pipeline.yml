@@ -76,14 +76,23 @@ jobs:
           Reddit__UserAgent: "RedditReader/1.0 by u/tisaconundrum2"
           Reddit__Subreddits__0: MaliciousCompliance
           Reddit__Subreddits__1: ProRevenge
+          Reddit__Subreddits__2: PettyRevenge
+          Reddit__Subreddits__3: TalesFromRetail
+          Reddit__Subreddits__4: TalesFromTheFrontDesk
+          Reddit__Subreddits__5: TalesFromIT
           Reddit__Filter: top
           Reddit__TopPeriod: month
           Reddit__MinWordCount: "100"
+          Gemini__Model: gemini-2.0-flash
           Pipeline__OutputDir: ${{ github.workspace }}/output
+          Pipeline__SeedCatalogOnly: "true"
           Pipeline__FeedFile: ${{ github.workspace }}/output/feed-0001.xml
           Pipeline__FeedBaseUrl: https://tisaconundrum2.github.io/Reddit.Reader
           Pipeline__PostLimit: ${{ vars.POST_LIMIT || '50' }}
           KokoroTts__BaseUrl: http://localhost:5000
+          KokoroTts__Voice: af_heart
+          KokoroTts__Speed: "1.0"
+          RapidApi__Host: reddit3.p.rapidapi.com
         run: |
           mkdir -p ${{ github.workspace }}/output
           dotnet run --no-launch-profile

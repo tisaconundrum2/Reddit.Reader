@@ -32,7 +32,7 @@ public sealed class Worker(
         try
         {
             await BuildCatalogAsync(subreddits, filter, stoppingToken);
-            if (config.GetValue<bool>("Pipeline:SeedCatalog"))
+            if (config.GetValue<bool>("Pipeline:SeedCatalogOnly"))
             {
                 logger.LogInformation("Seeded catalog only; skipping processing steps.");
                 return;
