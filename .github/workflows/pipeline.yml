@@ -61,11 +61,9 @@ jobs:
           '
           echo "Kokoro TTS is ready."
 
-      # ── 4b. Install ffmpeg ──────────────────────────────────────────
+      # ── 4b. Install ffmpeg (cached) ─────────────────────────────────
       - name: Install ffmpeg
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends ffmpeg
+        uses: FedericoCarboni/setup-ffmpeg@v3
 
       # ── 5. Run the pipeline ───────────────────────────────────────────────────
       # dotnet run gives us real-time logs directly in the Actions console.
