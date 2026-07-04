@@ -85,7 +85,7 @@ jobs:
           Reddit__MinWordCount: "100"
           Gemini__Model: gemini-2.0-flash
           Pipeline__OutputDir: ${{ github.workspace }}/output
-          Pipeline__SeedCatalogOnly: "true"
+          Pipeline__SeedCatalogOnly: "false"
           Pipeline__FeedFile: ${{ github.workspace }}/output/feed-0001.xml
           Pipeline__FeedBaseUrl: https://tisaconundrum2.github.io/Reddit.Reader
           Pipeline__PostLimit: ${{ vars.POST_LIMIT || '50' }}
