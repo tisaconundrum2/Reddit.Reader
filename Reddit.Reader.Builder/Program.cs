@@ -3,9 +3,9 @@ using Reddit.Reader.Builder.Services;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-// Allow `--seed-catalog` as a standalone flag (no value required).
+// Allow `--seed-catalog-only` as a standalone flag (no value required).
 if (args.Contains("--seed-catalog-only"))
-    builder.Configuration["Pipeline:SeedCatalog"] = "true";
+    builder.Configuration["Pipeline:SeedCatalogOnly"] = "true";
 
 builder.Services.AddHttpClient();
 builder.Services.ConfigureHttpClientDefaults(b => b
