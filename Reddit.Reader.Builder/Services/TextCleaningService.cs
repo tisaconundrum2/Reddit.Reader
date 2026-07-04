@@ -21,7 +21,7 @@ public sealed class TextCleaningService(
     {
         var apiKey = config["GEMINI_API_KEY"]
             ?? throw new InvalidOperationException("GEMINI_API_KEY is not configured.");
-        var model = config["Gemini:Model"] ?? "gemini-2.0-flash";
+        var model = config["Gemini:Model"] ?? "gemini-2.5-flash";
 
         var raw = string.IsNullOrWhiteSpace(selftext)
             ? title
