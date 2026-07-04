@@ -18,11 +18,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ── 1. Checkout the branch that triggered the pipeline (with LFS) ────
+      # ── 1. Checkout the latest commit on the branch (with LFS) ──────────
+      #   The pipeline commits new output *after* head_sha, so we need the
+      #   branch tip rather than the commit that started the pipeline.
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          ref: ${{ github.event.workflow_run.head_branch || github.ref }}
           lfs: true
 
       # ── 2. Assemble the deploy directory ─────────────────────────────────
