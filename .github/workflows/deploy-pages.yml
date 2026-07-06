@@ -9,13 +9,23 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write   # needed to push to gh-pages branch
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deployment at a time; do not cancel an in-progress deploy.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   deploy:
     # Only deploy when the pipeline succeeded (or on manual dispatch)
     if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       # ── 1. Checkout the latest commit on the branch (with LFS) ──────────
@@ -50,11 +60,21 @@ jobs:
             cp output/*.mp3 deploy/
           fi
 
-      # ── 3. Push to gh-pages branch ────────────────────────────────────────
-      - name: Deploy to gh-pages
-        uses: peaceiris/actions-gh-pages@v4
+      # ── 3. Deploy directly to GitHub Pages via the Actions API ────────────
+      #   Using upload-pages-artifact + deploy-pages bypasses the automatic
+      #   pages-build-deployment middleman that was failing intermittently at
+      #   the CDN sync stage. This approach deploys directly from our workflow,
+      #   giving us full control and consistent behaviour.
+      #   NOTE: The repository Pages source must be set to "GitHub Actions"
+      #   under Settings → Pages for this to work.
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./deploy
-          publish_branch: gh-pages
-          commit_message: "deploy: update GitHub Pages [skip ci]"
+          path: ./deploy
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
